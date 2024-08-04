@@ -8,6 +8,7 @@ import { OpenAI } from 'openai';
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import dotenv from 'dotenv';
+import ffmpeg from 'fluent-ffmpeg';
 dotenv.config();
 // 2. Setup for OpenAI and keyword detection.
 const openai = new OpenAI();
@@ -48,8 +49,9 @@ const handleSilence = async () => {
         console.log("Keyword detected...");
         const responseText = await getOpenAIResponse(message);
         const fileName = await convertResponseToAudio(responseText);
+        await applyRoboticEffect(`./audio/${fileName}`, `./audio/robot-${fileName}`);
         console.log("Playing audio...");
-        await sound.play('./audio/' + fileName);
+        await sound.play(`./audio/robot-${fileName}`);
         console.log("Playback finished...");
     }
     startRecordingProcess();
@@ -109,6 +111,22 @@ async function convertResponseToAudio(text) {
         response.body.on('error', reject);
     });
 };
+function applyRoboticEffect(inputFile, outputFile) {
+    return new Promise((resolve, reject) => {
+        ffmpeg(inputFile)
+          .audioFilters([
+              'treble=g=10', // Boost the treble
+              'afftdn=nf=-25', // Noise reduction
+              'aecho=0.8:0.88:6:0.4', // Echo effect
+              'flanger', // Flanger effect
+              'aresample=async=1' // Resample audio
+          ])
+          .toFormat('mp3')
+          .on('end', () => resolve(outputFile))
+          .on('error', reject)
+          .save(outputFile);
+    });
+}
 // 10. Start the application and keep it alive.
 startRecordingProcess();
 process.stdin.resume();
