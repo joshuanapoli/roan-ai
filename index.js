@@ -84,13 +84,15 @@ const transcribeAudio = async filename => {
     return transcriptionResponse.text;
 };
 // 8. Communicate with OpenAI.
+const messages = [
+    new SystemMessage("You are an AI named Echo. You are positive and kind."),
+];
 const getOpenAIResponse = async message => {
     console.log("Communicating with OpenAI...");
+    messages.push(new HumanMessage(message));
     const chat = new ChatOpenAI();
-    const response = await chat.call([
-        new SystemMessage("You are a helpful voice assistant named Echo."),
-        new HumanMessage(message),
-    ]);
+    const response = await chat.call(messages);
+    messages.push(response);
     return response.text;
 };
 // 9. Convert response to audio using Eleven Labs.
