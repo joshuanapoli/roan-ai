@@ -1,15 +1,13 @@
-# Create Your Own Voice Assistant with Node.js, Langchain & Eleven Labs in 9 Minutes
-[![Create Your Own Voice Assistant with Node.js, Langchain & Eleven Labs in 9 Minutes](https://img.youtube.com/vi/myvkeCrw6Rg/maxresdefault.jpg)](https://www.youtube.com/watch?v=myvkeCrw6Rg)
-https://www.youtube.com/watch?v=myvkeCrw6Rg
+# Roan AI
 
-## Connect and Support
+An AI for Roan's room. Ultimately, he wants something like C3PO. We'll start with the easiest part: the brain.
 
-I'm the developer behind Developers Digest. If you find my work helpful or enjoy what I do, consider supporting me. Here are a few ways you can do that:
+## Saturday, August 3, 2024
 
-- **Patreon**: Support me on Patreon at [patreon.com/DevelopersDigest](https://www.patreon.com/DevelopersDigest)
-- **Buy Me A Coffee**: You can buy me a coffee at [buymeacoffee.com/developersdigest](https://www.buymeacoffee.com/developersdigest)
-- **Website**: Check out my website at [developersdigest.tech](https://developersdigest.tech)
-- **Github**: Follow me on GitHub at [github.com/developersdigest](https://github.com/developersdigest)
-- **Twitter**: Follow me on Twitter at [twitter.com/dev__digest](https://twitter.com/dev__digest)
+To get something working quickly, I began from @developersdigest [Create-Your-Own-Voice-Assistant-with-Node.js-Langchain-Eleven-Labs-in-9-Minutes](https://github.com/developersdigest/Create-Your-Own-Voice-Assistant-with-Node.js-Langchain-Eleven-Labs-in-9-Minutes). It was a little out-of date; langchain has reoragnized how they publish their npm packages. It was also missing a couple of dependencies from package.json. These difficulties were easy enough to overcome. The base project is quite janky, running external applications to record and play .mp3 files. Nevertheless, it did live up to the title of getting started super quickly.
 
-Your support is greatly appreciated and helps me continue to develop and maintain free, open-source projects.
+Roan was really interested in giving the bot a "robot" voice. Neither ElevenLabs nor OpenAI provide one, so I added a distortion step using ffmpeg.
+
+AWS and Google offer speach-to-text with streaming and diarization. Switching from OpenAI to one of these services might improve the chatbot by giving lower latency and offering a possibility of tracking a conversation when there is more than one speaker.
+
+There are a lot more options if we rewrite this in Python. Maybe we'll go that way. It looks like an uphill battle to remove the reliance on external applications (sox, ffmpeg, afplay) while sticking to the Node.js ecosystem.
