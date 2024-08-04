@@ -1,4 +1,4 @@
-// 1. Importing required modules i.e. npm install mic sound-play wav stream openai langchain elevenlabs-node dotenv 
+// 1. Importing required modules i.e. npm install mic sound-play wav stream openai langchain elevenlabs-node dotenv
 import mic from 'mic';
 import sound  from 'sound-play'
 import { Writer } from 'wav';
@@ -7,7 +7,6 @@ import fs, { createWriteStream } from 'fs';
 import { OpenAI } from 'openai';
 import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import voice from 'elevenlabs-node';
 import dotenv from 'dotenv';
 dotenv.config();
 // 2. Setup for OpenAI and keyword detection.
@@ -95,21 +94,19 @@ const getOpenAIResponse = async message => {
     messages.push(response);
     return response.text;
 };
-// 9. Convert response to audio using Eleven Labs.
-const convertResponseToAudio = async text => {
-    const apiKey = process.env.ELEVEN_LABS_API_KEY;
-    const voiceID = "pNInz6obpgDQGcFmaJgB";
+// 9. Convert response to audio using OpenAI.
+async function convertResponseToAudio(text) {
     const fileName = `${Date.now()}.mp3`;
     console.log("Converting response to audio...");
-    const audioStream = await voice.textToSpeechStream(apiKey, voiceID, text);
+    const response = await openai.audio.speech.create({model: "tts-1", voice: "echo", input: text});
     const fileWriteStream = fs.createWriteStream('./audio/' + fileName);
-    audioStream.pipe(fileWriteStream);
+    response.body.pipe(fileWriteStream);
     return new Promise((resolve, reject) => {
         fileWriteStream.on('finish', () => {
             console.log("Audio conversion done...");
             resolve(fileName);
         });
-        audioStream.on('error', reject);
+        response.body.on('error', reject);
     });
 };
 // 10. Start the application and keep it alive.
