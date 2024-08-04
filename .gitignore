@@ -1,0 +1,5 @@
+.DS_Store
+.env
+.idea/
+audio/
+node_modules/
