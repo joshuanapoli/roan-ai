@@ -12,7 +12,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 // 2. Setup for OpenAI and keyword detection.
 const openai = new OpenAI();
-const keyword = "gpt";
+const keyword = "echo";
 // 3. Initial microphone setup.
 let micInstance = mic({ rate: '16000', channels: '1', debug: false, exitOnSilence: 6 });
 let micInputStream = micInstance.getAudioStream();
@@ -88,7 +88,7 @@ const getOpenAIResponse = async message => {
     console.log("Communicating with OpenAI...");
     const chat = new ChatOpenAI();
     const response = await chat.call([
-        new SystemMessage("You are a helpful voice assistant"),
+        new SystemMessage("You are a helpful voice assistant named Echo."),
         new HumanMessage(message),
     ]);
     return response.text;
