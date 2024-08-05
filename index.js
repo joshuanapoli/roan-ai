@@ -9,7 +9,21 @@ import { ChatOpenAI } from "@langchain/openai";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import dotenv from 'dotenv';
 import ffmpeg from 'fluent-ffmpeg';
+import NodeWebcam from 'node-webcam';
+import isLooking from './src/isLooking.js';
 dotenv.config();
+const webcamOptions = {
+    width: 1280,
+    height: 720,
+    quality: 100,
+    delay: 0,
+    saveShots: true,
+    output: "jpeg",
+    device: false,
+    callbackReturn: "location",
+    verbose: false
+};
+const webcam = NodeWebcam.create(webcamOptions);
 // 2. Setup for OpenAI and keyword detection.
 const openai = new OpenAI();
 const keyword = "echo";
@@ -43,16 +57,18 @@ const handleSilence = async () => {
     if (!isRecording) return;
     isRecording = false;
     micInstance.stop();
-    const audioFilename = await saveAudio(audioChunks);
-    const message = await transcribeAudio(audioFilename);
-    if (message && message.toLowerCase().includes(keyword)) {
-        console.log("Keyword detected...");
-        const responseText = await getOpenAIResponse(message);
-        const fileName = await convertResponseToAudio(responseText);
-        await applyRoboticEffect(`./audio/${fileName}`, `./audio/robot-${fileName}`);
-        console.log("Playing audio...");
-        await sound.play(`./audio/robot-${fileName}`);
-        console.log("Playback finished...");
+    if (isLooking()) {
+        const audioFilename = await saveAudio(audioChunks);
+        const message = await transcribeAudio(audioFilename);
+        if (message && message.toLowerCase().includes(keyword)) {
+            console.log("Keyword detected...");
+            const responseText = await getOpenAIResponse(message);
+            const fileName = await convertResponseToAudio(responseText);
+            await applyRoboticEffect(`./audio/${fileName}`, `./audio/robot-${fileName}`);
+            console.log("Playing audio...");
+            await sound.play(`./audio/robot-${fileName}`);
+            console.log("Playback finished...");
+        }
     }
     startRecordingProcess();
 };

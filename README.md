@@ -11,3 +11,19 @@ Roan was really interested in giving the bot a "robot" voice. Neither ElevenLabs
 AWS and Google offer speach-to-text with streaming and diarization. Switching from OpenAI to one of these services might improve the chatbot by giving lower latency and offering a possibility of tracking a conversation when there is more than one speaker.
 
 There are a lot more options if we rewrite this in Python. Maybe we'll go that way. It looks like an uphill battle to remove the reliance on external applications (sox, ffmpeg, afplay) while sticking to the Node.js ecosystem.
+
+## Sunday, August 4, 2024
+
+One obvious problem is that using a wake word is quite awkward for a multi-turn conversation. We'll try using vision to solve this. The bot will become interactive when a person is looking at the camera.
+
+For Mac, we need imagesnap.
+
+```
+brew install imagesnap
+```
+
+On Linux, we need fswebcam.
+
+```
+sudo apt-get install fswebcam
+```
