@@ -8,7 +8,7 @@ To get something working quickly, I began from @developersdigest [Create-Your-Ow
 
 Roan was really interested in giving the bot a "robot" voice. Neither ElevenLabs nor OpenAI provide one, so I added a distortion step using ffmpeg.
 
-AWS and Google offer speach-to-text with streaming and diarization. Switching from OpenAI to one of these services might improve the chatbot by giving lower latency and offering a possibility of tracking a conversation when there is more than one speaker.
+AWS and Google offer speech-to-text with streaming and diarization. Switching from OpenAI to one of these services might improve the chatbot by giving lower latency and offering a possibility of tracking a conversation when there is more than one speaker.
 
 There are a lot more options if we rewrite this in Python. Maybe we'll go that way. It looks like an uphill battle to remove the reliance on external applications (sox, ffmpeg, afplay) while sticking to the Node.js ecosystem.
 
